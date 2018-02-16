@@ -4,18 +4,19 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox prefHeight="403.0" prefWidth="446.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<VBox prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controller">
    <children>
       <HBox alignment="CENTER" prefHeight="0.0" prefWidth="0.0" spacing="20.0" style="-fx-background-color: lightgrey;">
          <children>
             <Button mnemonicParsing="false" text="Start" />
             <Button mnemonicParsing="false" text="Stop" />
             <Button mnemonicParsing="false" text="HeatMap" />
-            <ComboBox prefWidth="150.0" promptText="choose mode" />
+            <ComboBox fx:id="modeComboBox" prefWidth="150.0" promptText="choose mode" />
          </children>
          <padding>
             <Insets bottom="10.0" top="10.0" />
          </padding>
       </HBox>
+      <GridPane fx:id="grid" gridLinesVisible="true" />
    </children>
 </VBox>
