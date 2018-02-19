@@ -8,9 +8,10 @@
    <children>
       <HBox alignment="CENTER" prefHeight="0.0" prefWidth="0.0" spacing="20.0" style="-fx-background-color: lightgrey;">
          <children>
-            <Button mnemonicParsing="false" text="Start" />
-            <Button mnemonicParsing="false" text="Stop" />
-            <Button mnemonicParsing="false" text="HeatMap" />
+            <Label fx:id="stepCounter" text="Steps: 0" />
+            <Button mnemonicParsing="false" text="Start" onAction="#startSimulation" />
+            <Button disable="true" mnemonicParsing="false" text="Stop" />
+            <Button disable="true" mnemonicParsing="false" text="HeatMap" />
             <ComboBox fx:id="modeComboBox" prefWidth="150.0" promptText="choose mode" />
          </children>
          <padding>
