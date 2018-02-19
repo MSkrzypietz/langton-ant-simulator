@@ -1,42 +1,132 @@
 package base;
 
-public class Ant {
+import configuration.Configuration;
+import javafx.application.Platform;
+import main.Controller;
 
-    private int currentRowPos;
-    private int currentColPos;
+public class Ant implements Runnable {
 
-    private final int rowCount;
-    private final int colCount;
+    private Direction currentDirection = Direction.UP;
 
-    public Ant(int currentRowPos, int currentColPos, int rowCount, int colCount) {
-        this.currentRowPos = currentRowPos;
-        this.currentColPos = currentColPos;
-        this.rowCount = rowCount;
-        this.colCount = colCount;
+    private Cell currentCell;
+    private boolean isRunning = true;
+
+    private Controller controller;
+
+    public Ant(Cell currentCell, Controller controller) {
+        this.currentCell = currentCell;
+        this.controller = controller;
     }
 
-    public int getCurrentRowPos() {
-        return currentRowPos;
+    @Override
+    public void run() {
+        while (isRunning) {
+            Platform.runLater(() -> {
+                move();
+                controller.repaintGridLines();
+            });
+
+            try {
+                Thread.sleep(5);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
-    public int getCurrentColPos() {
-        return currentColPos;
+    private boolean move() {
+        if (Configuration.instance.states.get(currentCell.getCurrentStateIndex()).getMovement() == Movement.LEFT) {
+            turnLeft();
+        } else {
+            turnRight();
+        }
+        currentCell.nextState();
+        switch (currentDirection) {
+            case UP: {
+                isRunning = moveUp();
+                break;
+            }
+            case RIGHT: {
+                isRunning = moveRight();
+                break;
+            }
+            case DOWN: {
+                isRunning = moveDown();
+                break;
+            }
+            case LEFT: {
+                isRunning = moveLeft();
+                break;
+            }
+        }
+        controller.incStepCounter();
+        return isRunning;
     }
 
-    public boolean moveUp() {
-        return false;
+    private void turnLeft() {
+        switch (currentDirection) {
+            case UP: {
+                currentDirection = Direction.LEFT;
+                break;
+            }
+            case LEFT: {
+                currentDirection = Direction.DOWN;
+                break;
+            }
+            case DOWN: {
+                currentDirection = Direction.RIGHT;
+                break;
+            }
+            case RIGHT: {
+                currentDirection = Direction.UP;
+                break;
+            }
+        }
     }
 
-    public boolean moveDown() {
-        return false;
+    private void turnRight() {
+        switch (currentDirection) {
+            case UP: {
+                currentDirection = Direction.RIGHT;
+                break;
+            }
+            case RIGHT: {
+                currentDirection = Direction.DOWN;
+                break;
+            }
+            case DOWN: {
+                currentDirection = Direction.LEFT;
+                break;
+            }
+            case LEFT: {
+                currentDirection = Direction.UP;
+                break;
+            }
+        }
     }
 
-    public boolean moveLeft() {
-        return false;
+    private boolean moveUp() {
+        if (currentCell.getRowPos() - 1 < 0) return false;
+        currentCell = controller.getCell(currentCell.getRowPos() - 1, currentCell.getColPos());
+        return true;
     }
 
-    public boolean moveRight() {
-        return false;
+    private boolean moveDown() {
+        if (currentCell.getRowPos() + 1 >= Configuration.GRID_SIZE) return false;
+        currentCell = controller.getCell(currentCell.getRowPos() + 1, currentCell.getColPos());
+        return true;
+    }
+
+    private boolean moveLeft() {
+        if (currentCell.getColPos() - 1 <= 0) return false;
+        currentCell = controller.getCell(currentCell.getRowPos(), currentCell.getColPos() - 1);
+        return true;
+    }
+
+    private boolean moveRight() {
+        if (currentCell.getColPos() + 1 >= Configuration.GRID_SIZE) return false;
+        currentCell = controller.getCell(currentCell.getRowPos(), currentCell.getColPos() + 1);
+        return true;
     }
 
 }
