@@ -11,7 +11,6 @@ public class Ant implements Runnable {
     private Direction currentDirection = Direction.UP;
 
     private Cell currentCell;
-    private boolean isRunning = true;
 
     private Controller controller;
 
@@ -22,7 +21,7 @@ public class Ant implements Runnable {
 
     @Override
     public void run() {
-        while (isRunning) {
+        while (!Thread.currentThread().isInterrupted()) {
             Platform.runLater(() -> {
                 move();
                 controller.repaintGridLines();
@@ -31,12 +30,12 @@ public class Ant implements Runnable {
             try {
                 Thread.sleep(controller.getCurrentSpeed());
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                Thread.currentThread().interrupt();
             }
         }
     }
 
-    private boolean move() {
+    private void move() {
         if (Configuration.instance.states.get(currentCell.getCurrentStateIndex()).getMovement() == Movement.LEFT) {
             turnLeft();
         } else {
@@ -45,24 +44,23 @@ public class Ant implements Runnable {
         currentCell.nextState();
         switch (currentDirection) {
             case UP: {
-                isRunning = moveUp();
+                moveUp();
                 break;
             }
             case RIGHT: {
-                isRunning = moveRight();
+                moveRight();
                 break;
             }
             case DOWN: {
-                isRunning = moveDown();
+                moveDown();
                 break;
             }
             case LEFT: {
-                isRunning = moveLeft();
+                moveLeft();
                 break;
             }
         }
         controller.incStepCounter();
-        return isRunning;
     }
 
     private void turnLeft() {
@@ -107,28 +105,24 @@ public class Ant implements Runnable {
         }
     }
 
-    private boolean moveUp() {
-        if (currentCell.getRowPos() - 1 < 0) return false;
+    private void moveUp() {
+        if (currentCell.getRowPos() - 1 < 0) Thread.currentThread().interrupt();
         currentCell = controller.getCell(currentCell.getRowPos() - 1, currentCell.getColPos());
-        return true;
     }
 
-    private boolean moveDown() {
-        if (currentCell.getRowPos() + 1 >= Configuration.GRID_SIZE) return false;
+    private void moveDown() {
+        if (currentCell.getRowPos() + 1 >= Configuration.GRID_SIZE) Thread.currentThread().interrupt();
         currentCell = controller.getCell(currentCell.getRowPos() + 1, currentCell.getColPos());
-        return true;
     }
 
-    private boolean moveLeft() {
-        if (currentCell.getColPos() - 1 <= 0) return false;
+    private void moveLeft() {
+        if (currentCell.getColPos() - 1 <= 0) Thread.currentThread().interrupt();
         currentCell = controller.getCell(currentCell.getRowPos(), currentCell.getColPos() - 1);
-        return true;
     }
 
-    private boolean moveRight() {
-        if (currentCell.getColPos() + 1 >= Configuration.GRID_SIZE) return false;
+    private void moveRight() {
+        if (currentCell.getColPos() + 1 >= Configuration.GRID_SIZE) Thread.currentThread().interrupt();
         currentCell = controller.getCell(currentCell.getRowPos(), currentCell.getColPos() + 1);
-        return true;
     }
 
 }
