@@ -12,5 +12,5 @@ sowie in Abhängigkeit der Anzahl der Besuche die besuchten Felder analog zu ein
 (zwischen Minimum mit dunkelblau und Maximum mit dunkelrot) eingefärbt:
 
 <p align="center">
-  <img src="https://github.com/MSkrzypietz/Langton_Ant/blob/master/heatmap.PNG?raw=true" alt="heatmap">
+  <img src="https://github.com/MSkrzypietz/Langton_Ant/blob/master/res/heatmap.PNG?raw=true" alt="heatmap">
 </p>
