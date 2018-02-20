@@ -14,6 +14,8 @@ public class Ant implements Runnable {
 
     private Controller controller;
 
+    private Thread antThread;
+
     public Ant(Cell currentCell, Controller controller) {
         this.currentCell = currentCell;
         this.controller = controller;
@@ -21,17 +23,18 @@ public class Ant implements Runnable {
 
     @Override
     public void run() {
-        while (!Thread.currentThread().isInterrupted()) {
-            Platform.runLater(() -> {
-                move();
-                controller.repaintGridLines();
-            });
-
-            try {
+        try {
+            antThread = Thread.currentThread();
+            while (!Thread.currentThread().isInterrupted()) {
+                Platform.runLater(() -> {
+                    move();
+                    controller.repaintGridLines();
+                });
                 Thread.sleep(controller.getCurrentSpeed());
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
             }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            controller.stopSimulation();
         }
     }
 
@@ -106,23 +109,27 @@ public class Ant implements Runnable {
     }
 
     private void moveUp() {
-        if (currentCell.getRowPos() - 1 < 0) Thread.currentThread().interrupt();
+        if (currentCell.getRowPos() - 1 < 0) stopAntThread();
         currentCell = controller.getCell(currentCell.getRowPos() - 1, currentCell.getColPos());
     }
 
     private void moveDown() {
-        if (currentCell.getRowPos() + 1 >= Configuration.GRID_SIZE) Thread.currentThread().interrupt();
+        if (currentCell.getRowPos() + 1 >= Configuration.GRID_SIZE) stopAntThread();
         currentCell = controller.getCell(currentCell.getRowPos() + 1, currentCell.getColPos());
     }
 
     private void moveLeft() {
-        if (currentCell.getColPos() - 1 <= 0) Thread.currentThread().interrupt();
+        if (currentCell.getColPos() - 1 <= 0) stopAntThread();
         currentCell = controller.getCell(currentCell.getRowPos(), currentCell.getColPos() - 1);
     }
 
     private void moveRight() {
-        if (currentCell.getColPos() + 1 >= Configuration.GRID_SIZE) Thread.currentThread().interrupt();
+        if (currentCell.getColPos() + 1 >= Configuration.GRID_SIZE) stopAntThread();
         currentCell = controller.getCell(currentCell.getRowPos(), currentCell.getColPos() + 1);
+    }
+
+    private void stopAntThread() {
+        antThread.interrupt();
     }
 
 }

@@ -119,7 +119,7 @@ public class Controller {
     }
 
     @FXML
-    private void stopSimulation() {
+    public void stopSimulation() {
         antThread.interrupt();
         stopButton.disableProperty().setValue(true);
         heatMapButton.disableProperty().setValue(false);
