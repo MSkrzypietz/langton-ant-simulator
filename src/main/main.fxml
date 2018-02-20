@@ -9,9 +9,9 @@
       <HBox alignment="CENTER" prefHeight="0.0" prefWidth="0.0" spacing="20.0" style="-fx-background-color: lightgrey;">
          <children>
             <Label fx:id="stepCounter" text="Steps: 0" />
-            <Button mnemonicParsing="false" text="Start" onAction="#startSimulation" />
-            <Button disable="true" mnemonicParsing="false" text="Stop" />
-            <Button disable="true" mnemonicParsing="false" text="HeatMap" />
+            <Button fx:id="startButton" mnemonicParsing="false" text="Start" onAction="#startSimulation" />
+            <Button fx:id="stopButton" disable="true" mnemonicParsing="false" text="Stop" onAction="#stopSimulation" />
+            <Button fx:id="heatMapButton" disable="true" mnemonicParsing="false" text="HeatMap" onAction="#startHeatMapShow" />
             <ComboBox fx:id="modeComboBox" prefWidth="150.0" promptText="choose mode" />
          </children>
          <padding>

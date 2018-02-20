@@ -5,11 +5,13 @@ import base.Cell;
 import enums.Movement;
 import base.State;
 import configuration.Configuration;
+import javafx.beans.property.BooleanProperty;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableListBase;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
@@ -26,6 +28,8 @@ public class Controller {
 
     private int counter = 0;
     private Cell[][] matrix = new Cell[GRID_SIZE][GRID_SIZE];
+    private Thread antThread;
+    private boolean init= false;
 
     @FXML
     private GridPane grid;
@@ -36,11 +40,19 @@ public class Controller {
     @FXML
     private Label stepCounter;
 
+    @FXML
+    private Button startButton;
+
+    @FXML
+    private Button stopButton;
+
+    @FXML
+    private Button heatMapButton;
+
     public void initialize() {
         initModeComboBox();
         initGridConstraints();
         initGridCells();
-
         repaintGridLines();
     }
 
@@ -82,20 +94,86 @@ public class Controller {
 
     @FXML
     private void startSimulation(ActionEvent event) throws InterruptedException {
-        if (modeComboBox.getValue() == null) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Missing Field");
-            alert.setHeaderText(null);
-            alert.setContentText("Please select a simulation mode.");
-            alert.showAndWait();
-            return;
+
+          if (modeComboBox.getValue() == null) {
+              Alert alert = new Alert(Alert.AlertType.INFORMATION);
+              alert.setTitle("Missing Field");
+              alert.setHeaderText(null);
+              alert.setContentText("Please select a simulation mode.");
+              alert.showAndWait();
+              return;
+          }
+          initStateList(modeComboBox.getValue());
+
+          Ant ant = new Ant(matrix[GRID_SIZE / 2][GRID_SIZE / 2], this);
+          antThread = new Thread(ant);
+
+          //Stop Button enable
+          BooleanProperty stopButtonDisable = stopButton.disableProperty();
+          stopButtonDisable.setValue(false);
+
+          //Start Button disable
+          BooleanProperty startButtonDisable = startButton.disableProperty();
+          startButtonDisable.setValue(true);
+          init = true;
+
+          antThread.start();
+
+
+    }
+
+    @FXML
+    private void stopSimulation() throws InterruptedException{
+
+        antThread.stop();
+
+        //Stop Button disable
+        BooleanProperty stopButtonDisable = stopButton.disableProperty();
+        stopButtonDisable.setValue(true);
+
+        //HeatMapButton Button enable
+        BooleanProperty heatMapButtonDisable = heatMapButton.disableProperty();
+        heatMapButtonDisable.setValue(false);
+
+    }
+
+    @FXML
+    private void startHeatMapShow(){
+
+
+        //HeatMapButton Button enable
+        BooleanProperty heatMapButtonDisable = heatMapButton.disableProperty();
+        heatMapButtonDisable.setValue(true);
+
+        showHeatMap();
+
+
+    }
+
+    private void showHeatMap(){
+
+      int maxVisitedCounter = getMaxVisitedCounter();
+
+        for (int i = 0; i < GRID_SIZE; i++) {
+            for (int j = 0; j < GRID_SIZE; j++) {
+                matrix[i][j].setCellHeatColor(maxVisitedCounter);
+            }
         }
-        initStateList(modeComboBox.getValue());
 
-        Ant ant = new Ant(matrix[GRID_SIZE/2][GRID_SIZE/2], this);
-        Thread thread = new Thread(ant);
-        thread.start();
 
+    }
+
+    private int getMaxVisitedCounter(){
+        int maxVisitedCounter =0;
+        for (int i = 0; i < GRID_SIZE; i++) {
+            for (int j = 0; j < GRID_SIZE; j++) {
+                if(matrix[i][j].getVisitedCounter()> maxVisitedCounter ){
+                    maxVisitedCounter =   matrix[i][j].getVisitedCounter();
+                }
+
+            }
+        }
+        return  maxVisitedCounter;
     }
 
     private void initStateList(String movementString) {
