@@ -1,5 +1,7 @@
 package base;
 
+import enums.Movement;
+
 public class State {
 
     private Movement movement;

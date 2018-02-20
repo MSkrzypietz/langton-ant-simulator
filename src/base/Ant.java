@@ -1,6 +1,8 @@
 package base;
 
 import configuration.Configuration;
+import enums.Direction;
+import enums.Movement;
 import javafx.application.Platform;
 import main.Controller;
 
