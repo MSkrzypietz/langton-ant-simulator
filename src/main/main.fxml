@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -9,10 +10,19 @@
       <HBox alignment="CENTER" prefHeight="0.0" prefWidth="0.0" spacing="20.0" style="-fx-background-color: lightgrey;">
          <children>
             <Label fx:id="stepCounter" text="Steps: 0" />
-            <Button mnemonicParsing="false" text="Start" onAction="#startSimulation" />
+            <Button mnemonicParsing="false" onAction="#startSimulation" text="Start" />
             <Button disable="true" mnemonicParsing="false" text="Stop" />
             <Button disable="true" mnemonicParsing="false" text="HeatMap" />
             <ComboBox fx:id="modeComboBox" prefWidth="150.0" promptText="choose mode" />
+            <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+               <children>
+                  <Label text="Speed:" />
+                  <Slider fx:id="speedSlider" />
+               </children>
+               <padding>
+                  <Insets bottom="5.0" top="5.0" />
+               </padding>
+            </HBox>
          </children>
          <padding>
             <Insets bottom="10.0" top="10.0" />
