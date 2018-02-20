@@ -29,7 +29,7 @@ public class Ant implements Runnable {
             });
 
             try {
-                Thread.sleep(5);
+                Thread.sleep(controller.getCurrentSpeed());
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

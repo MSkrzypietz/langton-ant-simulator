@@ -5,6 +5,8 @@ import base.Cell;
 import enums.Movement;
 import base.State;
 import configuration.Configuration;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableListBase;
 import javafx.event.ActionEvent;
@@ -12,6 +14,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
@@ -25,6 +28,7 @@ import static configuration.Configuration.GRID_SIZE;
 public class Controller {
 
     private int counter = 0;
+    private int currentSpeed = 1000;
     private Cell[][] matrix = new Cell[GRID_SIZE][GRID_SIZE];
 
     @FXML
@@ -36,10 +40,14 @@ public class Controller {
     @FXML
     private Label stepCounter;
 
+    @FXML
+    private Slider speedSlider;
+
     public void initialize() {
         initModeComboBox();
         initGridConstraints();
         initGridCells();
+        initSpeedSliderListener();
 
         repaintGridLines();
     }
@@ -113,11 +121,20 @@ public class Controller {
     }
 
     public Cell getCell(int rowPos, int colPos) {
+        //TODO: fix row/col pos
         return matrix[colPos][rowPos];
     }
 
     public void incStepCounter() {
         stepCounter.setText("Steps: " + ++counter);
+    }
+
+    private void initSpeedSliderListener() {
+        speedSlider.valueProperty().addListener((observable, oldValue, newValue) -> currentSpeed = (int) (5 + (995 - 9.95*newValue.doubleValue())));
+    }
+
+    public int getCurrentSpeed() {
+        return currentSpeed;
     }
 
 }
