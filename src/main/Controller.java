@@ -11,10 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableListBase;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
@@ -30,6 +27,7 @@ public class Controller {
     private int counter = 0;
     private int currentSpeed = 1000;
     private Cell[][] matrix = new Cell[GRID_SIZE][GRID_SIZE];
+    private Thread antThread;
 
     @FXML
     private GridPane grid;
@@ -43,12 +41,20 @@ public class Controller {
     @FXML
     private Slider speedSlider;
 
+    @FXML
+    private Button startButton;
+
+    @FXML
+    private Button stopButton;
+
+    @FXML
+    private Button heatMapButton;
+
     public void initialize() {
         initModeComboBox();
         initGridConstraints();
         initGridCells();
         initSpeedSliderListener();
-
         repaintGridLines();
     }
 
@@ -89,7 +95,7 @@ public class Controller {
     }
 
     @FXML
-    private void startSimulation(ActionEvent event) throws InterruptedException {
+    private void startSimulation() {
         if (modeComboBox.getValue() == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Missing Field");
@@ -99,11 +105,48 @@ public class Controller {
             return;
         }
         initStateList(modeComboBox.getValue());
+        initButtons();
 
         Ant ant = new Ant(matrix[GRID_SIZE/2][GRID_SIZE/2], this);
-        Thread thread = new Thread(ant);
-        thread.start();
+        antThread = new Thread(ant);
+        antThread.start();
+    }
 
+    private void initButtons() {
+        startButton.disableProperty().setValue(true);
+        stopButton.disableProperty().setValue(false);
+        modeComboBox.disableProperty().setValue(true);
+    }
+
+    @FXML
+    private void stopSimulation() {
+        antThread.interrupt();
+        stopButton.disableProperty().setValue(true);
+        heatMapButton.disableProperty().setValue(false);
+    }
+
+    @FXML
+    private void startHeatMapShow() {
+        heatMapButton.disableProperty().setValue(true);
+        showHeatMap();
+    }
+
+    private void showHeatMap(){
+        int maxVisitedCounter = getMaxVisitedCounter();
+        for (int i = 0; i < GRID_SIZE; i++) {
+            for (int j = 0; j < GRID_SIZE; j++) {
+                matrix[i][j].setCellHeatColor(maxVisitedCounter);
+            }
+        }
+    }
+
+    private int getMaxVisitedCounter(){
+        int maxVisitedCounter =0;
+        for (int i = 0; i < GRID_SIZE; i++)
+            for (int j = 0; j < GRID_SIZE; j++)
+                if (matrix[i][j].getVisitedCounter() > maxVisitedCounter)
+                    maxVisitedCounter = matrix[i][j].getVisitedCounter();
+        return  maxVisitedCounter;
     }
 
     private void initStateList(String movementString) {
