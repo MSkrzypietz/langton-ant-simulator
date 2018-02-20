@@ -109,22 +109,22 @@ public class Ant implements Runnable {
     }
 
     private void moveUp() {
-        if (currentCell.getRowPos() - 1 < 0) stopAntThread();
+        if (currentCell.getRowPos() - 1 < 0) { stopAntThread(); return; }
         currentCell = controller.getCell(currentCell.getRowPos() - 1, currentCell.getColPos());
     }
 
     private void moveDown() {
-        if (currentCell.getRowPos() + 1 >= Configuration.GRID_SIZE) stopAntThread();
+        if (currentCell.getRowPos() + 1 >= Configuration.GRID_SIZE) { stopAntThread(); return; }
         currentCell = controller.getCell(currentCell.getRowPos() + 1, currentCell.getColPos());
     }
 
     private void moveLeft() {
-        if (currentCell.getColPos() - 1 <= 0) stopAntThread();
+        if (currentCell.getColPos() - 1 <= 0) { stopAntThread(); return; }
         currentCell = controller.getCell(currentCell.getRowPos(), currentCell.getColPos() - 1);
     }
 
     private void moveRight() {
-        if (currentCell.getColPos() + 1 >= Configuration.GRID_SIZE) stopAntThread();
+        if (currentCell.getColPos() + 1 >= Configuration.GRID_SIZE) { stopAntThread(); return; }
         currentCell = controller.getCell(currentCell.getRowPos(), currentCell.getColPos() + 1);
     }
 
