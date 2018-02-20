@@ -1,6 +1,7 @@
 package base;
 
 import configuration.Configuration;
+import enums.CellColor;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 
