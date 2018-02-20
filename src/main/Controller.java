@@ -2,10 +2,9 @@ package main;
 
 import base.Ant;
 import base.Cell;
-import base.Movement;
+import enums.Movement;
 import base.State;
 import configuration.Configuration;
-import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableListBase;
 import javafx.event.ActionEvent;
@@ -16,8 +15,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
-import javafx.scene.paint.Paint;
-import javafx.scene.shape.Rectangle;
 
 import java.util.Arrays;
 import java.util.List;
