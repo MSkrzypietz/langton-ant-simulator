@@ -14,7 +14,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("main.fxml"));
-        primaryStage.getIcons().add(new Image("file:res/appIcon.png"));
+        primaryStage.getIcons().add(new Image("file:res/antIcon.png"));
         primaryStage.setTitle("Langton's Ant");
         primaryStage.setScene(new Scene(root, 790, 835));
         primaryStage.setResizable(false);
