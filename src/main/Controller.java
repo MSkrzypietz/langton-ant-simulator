@@ -50,6 +50,9 @@ public class Controller {
     @FXML
     private Button heatMapButton;
 
+    @FXML
+    private Button clearButton;
+
     public void initialize() {
         initModeComboBox();
         initGridConstraints();
@@ -86,6 +89,7 @@ public class Controller {
     }
 
     private void initGridCells() {
+        grid.getChildren().clear();
         for (int i = 0; i < GRID_SIZE; i++) {
             for (int j = 0; j < GRID_SIZE; j++) {
                 matrix[i][j] = new Cell(i, j, CELL_SIZE);
@@ -105,17 +109,15 @@ public class Controller {
             return;
         }
         initStateList(modeComboBox.getValue());
-        initButtons();
+
+        startButton.disableProperty().setValue(true);
+        stopButton.disableProperty().setValue(false);
+        modeComboBox.disableProperty().setValue(true);
+        clearButton.disableProperty().setValue(true);
 
         Ant ant = new Ant(matrix[GRID_SIZE/2][GRID_SIZE/2], this);
         antThread = new Thread(ant);
         antThread.start();
-    }
-
-    private void initButtons() {
-        startButton.disableProperty().setValue(true);
-        stopButton.disableProperty().setValue(false);
-        modeComboBox.disableProperty().setValue(true);
     }
 
     @FXML
@@ -123,6 +125,7 @@ public class Controller {
         antThread.interrupt();
         stopButton.disableProperty().setValue(true);
         heatMapButton.disableProperty().setValue(false);
+        clearButton.disableProperty().setValue(false);
     }
 
     @FXML
@@ -150,6 +153,7 @@ public class Controller {
     }
 
     private void initStateList(String movementString) {
+        Configuration.instance.states.clear();
         String[] movements = movementString.split("");
         for (String movement : movements)
             if (movement.equals("R"))
@@ -178,6 +182,20 @@ public class Controller {
 
     public int getCurrentSpeed() {
         return currentSpeed;
+    }
+
+    @FXML
+    private void clearSimulation() {
+        counter = 0;
+        stepCounter.setText("Steps: " + counter);
+        matrix = new Cell[GRID_SIZE][GRID_SIZE];
+        initGridCells();
+        repaintGridLines();
+
+        startButton.disableProperty().setValue(false);
+        stopButton.disableProperty().setValue(true);
+        modeComboBox.disableProperty().setValue(false);
+        heatMapButton.disableProperty().setValue(true);
     }
 
 }

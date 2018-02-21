@@ -10,8 +10,8 @@
          <children>
             <Label fx:id="stepCounter" text="Steps: 0" />
             <Button fx:id="startButton" mnemonicParsing="false" onAction="#startSimulation" text="Start" />
-            <Button fx:id="stopButton" disable="true" mnemonicParsing="false" text="Stop" onAction="#stopSimulation" />
-            <Button fx:id="heatMapButton" disable="true" mnemonicParsing="false" text="HeatMap" onAction="#startHeatMapShow" />
+            <Button fx:id="stopButton" disable="true" mnemonicParsing="false" onAction="#stopSimulation" text="Stop" />
+            <Button fx:id="heatMapButton" disable="true" mnemonicParsing="false" onAction="#startHeatMapShow" text="HeatMap" />
             <ComboBox fx:id="modeComboBox" prefWidth="150.0" promptText="choose mode" />
             <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                <children>
@@ -22,6 +22,7 @@
                   <Insets bottom="5.0" top="5.0" />
                </padding>
             </HBox>
+            <Button fx:id="clearButton" mnemonicParsing="false" text="Clear" onAction="#clearSimulation" />
          </children>
          <padding>
             <Insets bottom="10.0" top="10.0" />
