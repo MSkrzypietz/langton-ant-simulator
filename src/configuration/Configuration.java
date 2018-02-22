@@ -10,6 +10,6 @@ public enum Configuration {
     public ArrayList<State> states = new ArrayList<>();
 
     public static final int CELL_SIZE = 8;
-    public static final int GRID_SIZE = 100;
+    public static final int GRID_SIZE = 114;
 
 }
