@@ -15,7 +15,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
-import org.omg.PortableInterceptor.DISCARDING;
 
 import java.util.Arrays;
 import java.util.List;
@@ -64,9 +63,7 @@ public class Controller {
         initGridCells();
         initSpeedSliderListener();
         repaintGridLines();
-        Platform.runLater(() -> {
-            grid.add(arrow, GRID_SIZE/2, GRID_SIZE/2);
-        });
+        Platform.runLater(() -> grid.add(arrow, GRID_SIZE/2, GRID_SIZE/2));
     }
 
     private void initModeComboBox() {
@@ -173,13 +170,13 @@ public class Controller {
         }
     }
 
-    private int getMaxVisitedCounter(){
+    public int getMaxVisitedCounter(){
         int maxVisitedCounter =0;
         for (int i = 0; i < GRID_SIZE; i++)
             for (int j = 0; j < GRID_SIZE; j++)
                 if (matrix[i][j].getVisitedCounter() > maxVisitedCounter)
                     maxVisitedCounter = matrix[i][j].getVisitedCounter();
-        return  maxVisitedCounter;
+        return maxVisitedCounter;
     }
 
     private void initStateList(String movementString) {
