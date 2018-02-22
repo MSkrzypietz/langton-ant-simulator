@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controller">
+<VBox prefHeight="902.0" prefWidth="981.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controller">
    <children>
       <HBox alignment="CENTER" prefHeight="0.0" prefWidth="0.0" spacing="20.0" style="-fx-background-color: lightgrey;">
          <children>
@@ -13,6 +13,7 @@
             <Button fx:id="stopButton" disable="true" mnemonicParsing="false" onAction="#stopSimulation" text="Stop" />
             <Button fx:id="heatMapButton" disable="true" mnemonicParsing="false" onAction="#startHeatMapShow" text="HeatMap" />
             <ComboBox fx:id="modeComboBox" prefWidth="150.0" promptText="choose mode" />
+            <ComboBox fx:id="directionComboBox" prefWidth="150.0" promptText="choose direction" onAction="#updateArrowDirection" />
             <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                <children>
                   <Label text="Speed:" />
@@ -22,7 +23,7 @@
                   <Insets bottom="5.0" top="5.0" />
                </padding>
             </HBox>
-            <Button fx:id="clearButton" mnemonicParsing="false" text="Clear" onAction="#clearSimulation" />
+            <Button fx:id="clearButton" mnemonicParsing="false" onAction="#clearSimulation" text="Clear" />
          </children>
          <padding>
             <Insets bottom="10.0" top="10.0" />
