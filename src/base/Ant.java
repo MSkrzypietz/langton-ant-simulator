@@ -4,12 +4,11 @@ import configuration.Configuration;
 import enums.Direction;
 import enums.Movement;
 import javafx.application.Platform;
-import javafx.scene.layout.GridPane;
 import main.Controller;
 
 public class Ant implements Runnable {
 
-    private Direction currentDirection = Direction.UP;
+    private Direction currentDirection;
 
     private Cell currentCell;
 
@@ -17,29 +16,25 @@ public class Ant implements Runnable {
 
     private Thread antThread;
 
-    private GridPane grid;
+    private Arrow arrow;
 
-    private Arrow arrow = new Arrow();
-
-    public Ant(Cell currentCell, Controller controller, GridPane grid) {
+    public Ant(Cell currentCell, Controller controller, Arrow arrow) {
         this.currentCell = currentCell;
         this.controller = controller;
-        this.grid = grid;
+        this.arrow = arrow;
+        this.currentDirection = arrow.getCurrentDirection();
     }
 
     @Override
     public void run() {
         try {
-            Platform.runLater(() -> {
-                grid.add(arrow, currentCell.getColPos(), currentCell.getRowPos());
-            });
             antThread = Thread.currentThread();
             while (!Thread.currentThread().isInterrupted()) {
                 Platform.runLater(() -> {
-                    grid.getChildren().remove(arrow);
+                    controller.getGrid().getChildren().remove(arrow);
                     move();
                     arrow.setDirection(currentDirection);
-                    grid.add(arrow, currentCell.getColPos(), currentCell.getRowPos());
+                    controller.getGrid().add(arrow, currentCell.getColPos(), currentCell.getRowPos());
                     controller.repaintGridLines();
                 });
                 Thread.sleep(controller.getCurrentSpeed());
@@ -126,7 +121,7 @@ public class Ant implements Runnable {
     }
 
     private void moveDown() {
-        if (currentCell.getRowPos() + 1 >= Configuration.GRID_SIZE) { stopAntThread(); return; }
+        if (currentCell.getRowPos() + 1 >= Configuration.GRID_SIZE - 1) { stopAntThread(); return; }
         currentCell = controller.getCell(currentCell.getRowPos() + 1, currentCell.getColPos());
     }
 
@@ -136,7 +131,7 @@ public class Ant implements Runnable {
     }
 
     private void moveRight() {
-        if (currentCell.getColPos() + 1 >= Configuration.GRID_SIZE) { stopAntThread(); return; }
+        if (currentCell.getColPos() + 1 >= Configuration.GRID_SIZE - 1) { stopAntThread(); return; }
         currentCell = controller.getCell(currentCell.getRowPos(), currentCell.getColPos() + 1);
     }
 
