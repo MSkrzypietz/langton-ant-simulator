@@ -8,6 +8,8 @@ import javafx.scene.shape.Line;
 
 public class Arrow extends Group {
 
+    private Direction currentDirection = Direction.UP;
+
     public Arrow() {
         this(new Line(), new Line());
     }
@@ -30,9 +32,12 @@ public class Arrow extends Group {
 
         leftArrowHalf.setStrokeWidth(1.5);
         rightArrowHalf.setStrokeWidth(1.5);
+
+        setDirection(Direction.UP);
     }
 
     public void setDirection(Direction direction) {
+        currentDirection = direction;
         switch (direction) {
             case UP: {
                 this.setRotate(270);
@@ -51,6 +56,10 @@ public class Arrow extends Group {
                 break;
             }
         }
+    }
+
+    public Direction getCurrentDirection() {
+        return currentDirection;
     }
 
 }
