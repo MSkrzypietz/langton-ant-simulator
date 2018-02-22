@@ -1,10 +1,13 @@
 package main;
 
 import base.Ant;
+import base.Arrow;
 import base.Cell;
 import base.State;
 import configuration.Configuration;
+import enums.Direction;
 import enums.Movement;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableListBase;
 import javafx.fxml.FXML;
@@ -12,6 +15,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import org.omg.PortableInterceptor.DISCARDING;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,12 +29,15 @@ public class Controller {
     private int currentSpeed = 1000;
     private Cell[][] matrix = new Cell[GRID_SIZE][GRID_SIZE];
     private Thread antThread;
+    private Arrow arrow = new Arrow();
 
     @FXML
     private GridPane grid;
 
     @FXML
     private ComboBox<String> modeComboBox;
+
+    @FXML ComboBox<String> directionComboBox;
 
     @FXML
     private Label stepCounter;
@@ -52,10 +59,14 @@ public class Controller {
 
     public void initialize() {
         initModeComboBox();
+        initDirectionComboBox();
         initGridConstraints();
         initGridCells();
         initSpeedSliderListener();
         repaintGridLines();
+        Platform.runLater(() -> {
+            grid.add(arrow, GRID_SIZE/2, GRID_SIZE/2);
+        });
     }
 
     private void initModeComboBox() {
@@ -73,6 +84,23 @@ public class Controller {
             }
         };
         modeComboBox.setItems(modes);
+    }
+
+    private void initDirectionComboBox() {
+        ObservableList<String> directions = new ObservableListBase<String>() {
+            private List<String> directions = Arrays.asList("UP", "RIGHT", "DOWN", "LEFT");
+
+            @Override
+            public String get(int index) {
+                return directions.get(index);
+            }
+
+            @Override
+            public int size() {
+                return directions.size();
+            }
+        };
+        directionComboBox.setItems(directions);
     }
 
     private void initGridConstraints() {
@@ -97,22 +125,27 @@ public class Controller {
 
     @FXML
     private void startSimulation() {
-        if (modeComboBox.getValue() == null) {
+        if (modeComboBox.getValue() == null || directionComboBox.getValue() == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Missing Field");
             alert.setHeaderText(null);
-            alert.setContentText("Please select a simulation mode.");
+            if (modeComboBox.getValue() == null)
+                alert.setContentText("Please select a simulation mode.");
+            else
+                alert.setContentText("Please select a starting direction.");
             alert.showAndWait();
             return;
         }
         initStateList(modeComboBox.getValue());
+        setArrowDirection(directionComboBox.getValue());
 
         startButton.disableProperty().setValue(true);
         stopButton.disableProperty().setValue(false);
         modeComboBox.disableProperty().setValue(true);
+        directionComboBox.disableProperty().setValue(true);
         clearButton.disableProperty().setValue(true);
 
-        Ant ant = new Ant(matrix[GRID_SIZE/2][GRID_SIZE/2], this, grid);
+        Ant ant = new Ant(matrix[GRID_SIZE/2][GRID_SIZE/2], this, arrow);
         antThread = new Thread(ant);
         antThread.start();
     }
@@ -159,13 +192,32 @@ public class Controller {
                 Configuration.instance.states.add(new State(Movement.LEFT));
     }
 
+    private void setArrowDirection(String direction) {
+        switch (direction) {
+            case "UP" : {
+                arrow.setDirection(Direction.UP);
+                return;
+            }
+            case "RIGHT" : {
+                arrow.setDirection(Direction.RIGHT);
+                return;
+            }
+            case "DOWN" : {
+                arrow.setDirection(Direction.DOWN);
+                return;
+            }
+            case "LEFT" : {
+                arrow.setDirection(Direction.LEFT);
+            }
+        }
+    }
+
     public void repaintGridLines() {
         grid.setGridLinesVisible(false);
         grid.setGridLinesVisible(true);
     }
 
     public Cell getCell(int rowPos, int colPos) {
-        //TODO: fix row/col pos
         return matrix[colPos][rowPos];
     }
 
@@ -181,18 +233,31 @@ public class Controller {
         return currentSpeed;
     }
 
+    public GridPane getGrid() { return grid; }
+
     @FXML
     private void clearSimulation() {
         counter = 0;
         stepCounter.setText("Steps: " + counter);
         matrix = new Cell[GRID_SIZE][GRID_SIZE];
         initGridCells();
+        updateArrowDirection();
         repaintGridLines();
 
         startButton.disableProperty().setValue(false);
         stopButton.disableProperty().setValue(true);
         modeComboBox.disableProperty().setValue(false);
+        directionComboBox.disableProperty().setValue(false);
         heatMapButton.disableProperty().setValue(true);
+    }
+
+    @FXML
+    private void updateArrowDirection() {
+        Platform.runLater(() -> {
+            grid.getChildren().remove(arrow);
+            setArrowDirection(directionComboBox.getValue());
+            grid.add(arrow, GRID_SIZE/2, GRID_SIZE/2);
+        });
     }
 
 }
