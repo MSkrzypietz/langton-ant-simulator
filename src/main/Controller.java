@@ -2,14 +2,11 @@ package main;
 
 import base.Ant;
 import base.Cell;
-import enums.Movement;
 import base.State;
 import configuration.Configuration;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import enums.Movement;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableListBase;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.ColumnConstraints;
@@ -115,7 +112,7 @@ public class Controller {
         modeComboBox.disableProperty().setValue(true);
         clearButton.disableProperty().setValue(true);
 
-        Ant ant = new Ant(matrix[GRID_SIZE/2][GRID_SIZE/2], this);
+        Ant ant = new Ant(matrix[GRID_SIZE/2][GRID_SIZE/2], this, grid);
         antThread = new Thread(ant);
         antThread.start();
     }

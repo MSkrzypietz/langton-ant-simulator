@@ -4,6 +4,7 @@ import configuration.Configuration;
 import enums.Direction;
 import enums.Movement;
 import javafx.application.Platform;
+import javafx.scene.layout.GridPane;
 import main.Controller;
 
 public class Ant implements Runnable {
@@ -16,25 +17,36 @@ public class Ant implements Runnable {
 
     private Thread antThread;
 
-    public Ant(Cell currentCell, Controller controller) {
+    private GridPane grid;
+
+    private Arrow arrow = new Arrow();
+
+    public Ant(Cell currentCell, Controller controller, GridPane grid) {
         this.currentCell = currentCell;
         this.controller = controller;
+        this.grid = grid;
     }
 
     @Override
     public void run() {
         try {
+            Platform.runLater(() -> {
+                grid.add(arrow, currentCell.getColPos(), currentCell.getRowPos());
+            });
             antThread = Thread.currentThread();
             while (!Thread.currentThread().isInterrupted()) {
                 Platform.runLater(() -> {
+                    grid.getChildren().remove(arrow);
                     move();
+                    arrow.setDirection(currentDirection);
+                    grid.add(arrow, currentCell.getColPos(), currentCell.getRowPos());
                     controller.repaintGridLines();
                 });
                 Thread.sleep(controller.getCurrentSpeed());
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            controller.stopSimulation();
+            stopAntThread();
         }
     }
 
@@ -109,7 +121,7 @@ public class Ant implements Runnable {
     }
 
     private void moveUp() {
-        if (currentCell.getRowPos() - 1 < 0) { stopAntThread(); return; }
+        if (currentCell.getRowPos() - 1 <= 0) { stopAntThread(); return; }
         currentCell = controller.getCell(currentCell.getRowPos() - 1, currentCell.getColPos());
     }
 
@@ -130,6 +142,7 @@ public class Ant implements Runnable {
 
     private void stopAntThread() {
         antThread.interrupt();
+        controller.stopSimulation();
     }
 
 }
