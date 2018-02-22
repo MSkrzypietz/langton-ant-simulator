@@ -63,7 +63,6 @@ public class Controller {
         initGridCells();
         initSpeedSliderListener();
         repaintGridLines();
-        Platform.runLater(() -> grid.add(arrow, GRID_SIZE/2, GRID_SIZE/2));
     }
 
     private void initModeComboBox() {
@@ -158,10 +157,7 @@ public class Controller {
     @FXML
     private void startHeatMapShow() {
         heatMapButton.disableProperty().setValue(true);
-        showHeatMap();
-    }
 
-    private void showHeatMap(){
         int maxVisitedCounter = getMaxVisitedCounter();
         for (int i = 0; i < GRID_SIZE; i++) {
             for (int j = 0; j < GRID_SIZE; j++) {
