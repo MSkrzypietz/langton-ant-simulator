@@ -16,7 +16,7 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("main.fxml"));
         primaryStage.getIcons().add(new Image("file:res/antIcon.png"));
         primaryStage.setTitle("Langton's Ant");
-        primaryStage.setScene(new Scene(root, 790, 835));
+        primaryStage.setScene(new Scene(root, 902, 949));
         primaryStage.setResizable(false);
         primaryStage.show();
     }
