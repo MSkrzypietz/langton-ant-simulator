@@ -33,6 +33,7 @@ public class Ant implements Runnable {
                 Platform.runLater(() -> {
                     controller.getGrid().getChildren().remove(arrow);
                     move();
+                    controller.updateCounterLabel();
                     arrow.setDirection(currentDirection);
                     controller.getGrid().add(arrow, currentCell.getColPos(), currentCell.getRowPos());
                     controller.repaintGridLines();

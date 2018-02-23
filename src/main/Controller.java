@@ -144,6 +144,7 @@ public class Controller {
         Ant ant = new Ant(matrix[GRID_SIZE/2][GRID_SIZE/2], this, arrow);
         antThread = new Thread(ant);
         antThread.start();
+
     }
 
     @FXML
@@ -215,7 +216,11 @@ public class Controller {
     }
 
     public void incStepCounter() {
-        stepCounter.setText("Steps: " + ++counter);
+        counter++;
+    }
+
+    public void updateCounterLabel() {
+        stepCounter.setText("Steps: " + counter);
     }
 
     private void initSpeedSliderListener() {
