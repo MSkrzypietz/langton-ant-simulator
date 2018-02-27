@@ -5,6 +5,8 @@ import enums.CellColor;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 
+import java.util.ArrayList;
+
 public class Cell extends Rectangle {
 
     private int currentStateIndex = 0;
@@ -52,41 +54,40 @@ public class Cell extends Rectangle {
         }
     }
 
-    public void setCellHeatColor(int MaxVisited){
+    public void setCellHeatColor(ArrayList<Integer> sectionsForColor){
 
-        //Min zu Max in 6 Bereiche teilen (6 Farben)
-        //Bereich größe ausrechnen
-
-        double gapSize = ((double) MaxVisited) / 6;
-        double gap = (double) visitedCounter / gapSize;
-        /*
-            0 = white
-            0-1 = Blue
-            1-2 = turquoise
-            2-3 = Green
-            3-4 = Yellow
-            4-5 = Orange
-            5-6 = Red
+      /*   *Visited*
+             0= white
+             Rare= DarkBlue
+             Seldom = Blue
+             = turquoise
+             = Green
+             Often = Yellow
+             = Orange
+            Super often = Red
          */
         //White
-        if (gap == 0.0) {
+        if(visitedCounter == 0){
             super.setFill(Paint.valueOf("FFFFFF"));
-        } else if (gap < 1.0) {
+        }
+        else if (sectionsForColor.get(1)>visitedCounter) {
+            super.setFill(Paint.valueOf("10102f"));
+        } else if (sectionsForColor.get(2)>visitedCounter) {
             super.setFill(Paint.valueOf("17107f")); //Blue
 
-        } else if (gap < 2.0) {
+        } else if (sectionsForColor.get(3)>visitedCounter) {
             super.setFill(Paint.valueOf("13edf4")); //Turqouise
 
-        } else if (gap < 3.0) {
+        } else if (sectionsForColor.get(4) > visitedCounter) {
             super.setFill(Paint.valueOf("2eed21")); //Green
 
-        } else if (gap < 4.0) {
+        } else if (sectionsForColor.get(5) > visitedCounter) {
             super.setFill(Paint.valueOf("fcfc28")); //Yellow
 
-        } else if (gap < 5.0) {
+        } else if (sectionsForColor.get(6) > visitedCounter) {
             super.setFill(Paint.valueOf("ffa216")); //Orange
 
-        } else if (gap >= 5.0) {                    //red
+        } else if (sectionsForColor.get(7) >= visitedCounter ) {  //red
             super.setFill(Paint.valueOf("ef0e37"));
         }
 

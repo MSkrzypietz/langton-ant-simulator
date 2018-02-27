@@ -16,7 +16,9 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static configuration.Configuration.CELL_SIZE;
@@ -159,21 +161,33 @@ public class Controller {
     private void startHeatMapShow() {
         heatMapButton.disableProperty().setValue(true);
 
-        int maxVisitedCounter = getMaxVisitedCounter();
+        ArrayList<Integer> countVisitsEachField = getMaxVisitedCounter();
+        Collections.sort(countVisitsEachField);
+
+        ArrayList<Integer> sectionsForColor = new ArrayList<>();
+        sectionsForColor.add(countVisitsEachField.get(0));
+        for(int i = 1; i<7;i++){
+            int partsOfSectionsIndex = (int)((double)((countVisitsEachField.size()*i)/8.0));
+            sectionsForColor.add(countVisitsEachField.get((partsOfSectionsIndex)));
+        }
+        sectionsForColor.add(countVisitsEachField.get(countVisitsEachField.size()-1));
+
         for (int i = 0; i < GRID_SIZE; i++) {
             for (int j = 0; j < GRID_SIZE; j++) {
-                matrix[i][j].setCellHeatColor(maxVisitedCounter);
+                matrix[i][j].setCellHeatColor(sectionsForColor);
             }
         }
     }
 
-    public int getMaxVisitedCounter(){
-        int maxVisitedCounter =0;
+    public ArrayList<Integer> getMaxVisitedCounter(){
+        ArrayList<Integer> countVisitsEachField = new ArrayList<>();
         for (int i = 0; i < GRID_SIZE; i++)
-            for (int j = 0; j < GRID_SIZE; j++)
-                if (matrix[i][j].getVisitedCounter() > maxVisitedCounter)
-                    maxVisitedCounter = matrix[i][j].getVisitedCounter();
-        return maxVisitedCounter;
+            for (int j = 0; j < GRID_SIZE; j++) {
+                if(matrix[i][j].getVisitedCounter()>1) {
+                    countVisitsEachField.add(matrix[i][j].getVisitedCounter());
+                }
+            }
+        return countVisitsEachField;
     }
 
     private void initStateList(String movementString) {
