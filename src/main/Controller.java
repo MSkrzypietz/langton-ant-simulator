@@ -111,12 +111,20 @@ public class Controller {
         }
     }
 
-    private void initGridCells() {
+    public void initGridCells() {
         grid.getChildren().clear();
         for (int i = 0; i < GRID_SIZE; i++) {
             for (int j = 0; j < GRID_SIZE; j++) {
                 matrix[i][j] = new Cell(i, j, CELL_SIZE);
                 grid.add(matrix[i][j], i, j);
+            }
+        }
+    }
+
+    public void initGridCellsTest() {
+        for (int i = 0; i < GRID_SIZE; i++) {
+            for (int j = 0; j < GRID_SIZE; j++) {
+                matrix[i][j] = new Cell(i, j, CELL_SIZE);
             }
         }
     }
