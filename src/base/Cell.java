@@ -56,17 +56,6 @@ public class Cell extends Rectangle {
 
     public void setCellHeatColor(ArrayList<Integer> sectionsForColor){
 
-      /*   *Visited*
-             0= white
-             Rare= DarkBlue
-             Seldom = Blue
-             = turquoise
-             = Green
-             Often = Yellow
-             = Orange
-            Super often = Red
-         */
-        //White
         if(visitedCounter == 0){
             super.setFill(Paint.valueOf("FFFFFF"));
         }
@@ -83,7 +72,6 @@ public class Cell extends Rectangle {
 
         } else if (sectionsForColor.get(5) > visitedCounter) {
             super.setFill(Paint.valueOf("fcfc28")); //Yellow
-
         } else if (sectionsForColor.get(6) > visitedCounter) {
             super.setFill(Paint.valueOf("ffa216")); //Orange
 
